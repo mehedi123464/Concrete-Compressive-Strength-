@@ -27,6 +27,7 @@ x_scaler = model_data["x_scaler"]
 
 st.markdown("""
 <style>
+
 .big-title {
     font-size:40px;
     font-weight:bold;
@@ -48,6 +49,7 @@ st.markdown("""
     text-align:center;
     color:#003366;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -60,30 +62,27 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown(
-"""
-This tool predicts **28-Day Compressive Strength (MPa)**  
+st.markdown("""
+This application predicts **28-day compressive strength (MPa)**  
 using a machine-learning model trained on **1,095 laboratory samples**.
-"""
-)
+""")
 
 # ==============================
-# SIDEBAR INFO
+# SIDEBAR
 # ==============================
 
-st.sidebar.title("📊 Dataset Information")
+st.sidebar.title("📊 Model Information")
 
 st.sidebar.markdown("""
-**Number of Samples:** 1095  
+**Model:** K-Nearest Neighbors (KNN)
 
-**Target:**  
-Compressive Strength (MPa)
+**Samples:** 1,095
 
-**Prediction Range:**  
+**Output Range:**  
 2.95 – 85.04 MPa
 
-**Model Used:**  
-K-Nearest Neighbors (KNN)
+**Scaling Method:**  
+MinMaxScaler
 """)
 
 # ==============================
@@ -92,7 +91,10 @@ K-Nearest Neighbors (KNN)
 
 col1, col2, col3 = st.columns(3)
 
-# Column 1
+# ------------------------------
+# PRIMARY MATERIALS
+# ------------------------------
+
 with col1:
 
     st.markdown(
@@ -115,11 +117,14 @@ with col1:
         0.28, 0.37, 0.33
     )
 
-# Column 2
+# ------------------------------
+# SCMs (Correct Section)
+# ------------------------------
+
 with col2:
 
     st.markdown(
-        '<p class="section-title">⚗️ Supplementary Materials</p>',
+        '<p class="section-title">⚗️ Supplementary Cementitious Materials (SCMs)</p>',
         unsafe_allow_html=True
     )
 
@@ -133,17 +138,20 @@ with col2:
         0.0, 242.67, 80.0
     )
 
-    sp = st.slider(
-        "Superplasticizer (0 – 8.09 kg/m³)",
-        0.0, 8.09, 2.0
-    )
+# ------------------------------
+# CHEMICAL ADMIXTURES (Fixed)
+# ------------------------------
 
-# Column 3
 with col3:
 
     st.markdown(
-        '<p class="section-title">🧪 Chemical Additives</p>',
+        '<p class="section-title">🧪 Chemical Admixtures</p>',
         unsafe_allow_html=True
+    )
+
+    sp = st.slider(
+        "Superplasticizer (0 – 8.09 kg/m³)",
+        0.0, 8.09, 2.0
     )
 
     retarder = st.slider(
@@ -157,7 +165,7 @@ with col3:
     )
 
 # ==============================
-# PREDICTION
+# PREDICTION BUTTON
 # ==============================
 
 st.markdown("")
@@ -185,7 +193,7 @@ if st.button("🚀 Predict Compressive Strength"):
     )
 
 # ==============================
-# DATASET STATISTICS TABLE
+# DATASET SUMMARY TABLE
 # ==============================
 
 st.markdown("---")
