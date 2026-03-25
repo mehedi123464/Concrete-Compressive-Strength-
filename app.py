@@ -204,23 +204,112 @@ if st.button("🚀 Predict Compressive Strength"):
         wc
     ]])
 
+    # Scale input
     X_scaled = x_scaler.transform(features)
 
+    # Predict
     prediction = best_knn.predict(X_scaled)[0]
 
-    st.markdown(
-        f'<div class="result-box">Predicted Strength: {prediction:.2f} MPa</div>',
-        unsafe_allow_html=True
+    # ==============================
+    # STRENGTH CLASSIFICATION
+    # ==============================
+
+    if prediction < 20:
+        strength_class = "Low Strength"
+        class_color = "red"
+
+    elif prediction < 40:
+        strength_class = "Medium Strength"
+        class_color = "orange"
+
+    else:
+        strength_class = "High Strength"
+        class_color = "green"
+
+    # ==============================
+    # DISTANCE FROM MEAN
+    # ==============================
+
+    mean_values = np.array([
+        1078.98,
+        783.92,
+        72.77,
+        55.85,
+        1.80,
+        0.12,
+        0.61,
+        0.33
+    ])
+
+    distance = np.linalg.norm(features - mean_values)
+
+    if distance < 300:
+        reliability = "High Similarity to Training Data"
+
+    elif distance < 600:
+        reliability = "Moderate Similarity"
+
+    else:
+        reliability = "Low Similarity — Use with Caution"
+
+    # ==============================
+    # DISPLAY RESULT
+    # ==============================
+
+    st.markdown("### 📊 Prediction Result")
+
+    st.success(
+        f"Predicted 28-Day Compressive Strength: "
+        f"{prediction:.2f} MPa"
     )
 
-st.markdown("---")
+    st.markdown(
+        f"**Strength Class:** "
+        f":{class_color}[{strength_class}]"
+    )
 
-# ==============================
-# FOOTER
-# ==============================
+    st.info(
+        f"**Prediction Reliability:** {reliability}"
+    )
 
-st.markdown("""
-**Model:** K-Nearest Neighbors (KNN)  
-**Dataset Size:** 1,095 Samples  
-**Prediction Range:** 2.95 – 85.04 MPa  
-""")
+    # ==============================
+    # VISUAL RANGE BAR
+    # ==============================
+
+    st.markdown("### 📈 Strength Position in Dataset Range")
+
+    normalized_value = prediction / 85.04
+
+    st.progress(normalized_value)
+
+    # ==============================
+    # MIX SUMMARY TABLE
+    # ==============================
+
+    st.markdown("### 🧪 Mix Summary")
+
+    mix_table = {
+        "Parameter": [
+            "Sand",
+            "Cement",
+            "Fly Ash",
+            "Silica Fume",
+            "Superplasticizer",
+            "Retarder",
+            "Accelerator",
+            "W/C"
+        ],
+
+        "Value": [
+            sand,
+            cement,
+            fly_ash,
+            silica_fume,
+            sp,
+            retarder,
+            accelerator,
+            wc
+        ]
+    }
+
+    st.table(mix_table)
